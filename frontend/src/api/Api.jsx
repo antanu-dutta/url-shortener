@@ -4,7 +4,7 @@ import NotificationToast from "../components/UI/NotificationToast";
 
 // ✅ Create axios instance
 export const api = axios.create({
-  baseURL: "http://localhost:3000/api/v1",
+  baseURL: "https://url-shortener-backend-m9zf.onrender.com/api/v1",
   withCredentials: true,
 });
 
