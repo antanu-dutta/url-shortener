@@ -11,6 +11,7 @@ const Login = () => {
 
   useEffect(() => {
     if (user) {
+      navigate("/");
       toast.custom((t) => (
         <NotificationToast
           type="info"
@@ -18,9 +19,8 @@ const Login = () => {
           t={t}
         />
       ));
-      navigate("/");
     }
-  }, [user, navigate]);
+  }, []);
 
   return (
     <section>
