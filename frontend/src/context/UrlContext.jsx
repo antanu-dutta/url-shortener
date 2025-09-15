@@ -1,10 +1,12 @@
 // src/context/UrlContext.jsx
 import { createContext, useContext, useState, useEffect } from "react";
-import { api } from "../api/api";
+import { api } from "../api/Api";
+import { useAuth } from "./AuthContext"; // ✅ import user from AuthContext
 
 const UrlContext = createContext();
 
 export const UrlProvider = ({ children }) => {
+  const { user } = useAuth(); // ✅ track auth user
   const [urls, setUrls] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -13,7 +15,7 @@ export const UrlProvider = ({ children }) => {
   const getUrls = async () => {
     try {
       setLoading(true);
-      const res = await api.get("/url/urls");
+      const res = await api.get("/url/urls", { withCredentials: true });
       setUrls(res.data.data || []);
     } catch (err) {
       setError(err.response?.data?.message || "Failed to fetch URLs");
@@ -26,7 +28,7 @@ export const UrlProvider = ({ children }) => {
   const getSingleUrl = async (id) => {
     try {
       setLoading(true);
-      const res = await api.get(`/urls/${id}`);
+      const res = await api.get(`/urls/${id}`, { withCredentials: true });
       return res.data.data;
     } catch (err) {
       setError(err.response?.data?.message || "Failed to fetch URL");
@@ -39,10 +41,13 @@ export const UrlProvider = ({ children }) => {
   const createUrl = async (newUrl) => {
     try {
       setLoading(true);
-      const res = await api.post("/url/create", newUrl);
-      console.log(res);
-      setUrls((prev) => [res.data.data, ...prev]);
-      return res.data.data;
+      const res = await api.post("/url/create", newUrl, {
+        withCredentials: true,
+      });
+      if (res.data.data) {
+        setUrls((prev) => [res.data.data, ...prev]);
+      }
+      return res.data;
     } catch (err) {
       setError(err.response?.data?.message || "Failed to create URL");
     } finally {
@@ -54,7 +59,9 @@ export const UrlProvider = ({ children }) => {
   const updateUrl = async (id, updatedUrl) => {
     try {
       setLoading(true);
-      const res = await api.put(`/url/update/${id}`, updatedUrl);
+      const res = await api.put(`/url/update/${id}`, updatedUrl, {
+        withCredentials: true,
+      });
       if (res.data.success) {
         setUrls((prev) =>
           prev.map((url) => (url._id === id ? res.data.data : url))
@@ -72,7 +79,7 @@ export const UrlProvider = ({ children }) => {
   const deleteUrl = async (id) => {
     try {
       setLoading(true);
-      const res = await api.delete(`/url/${id}`);
+      const res = await api.delete(`/url/${id}`, { withCredentials: true });
       setUrls((prev) => prev.filter((url) => url._id !== id));
       return res.data;
     } catch (err) {
@@ -82,10 +89,14 @@ export const UrlProvider = ({ children }) => {
     }
   };
 
-  // Fetch URLs on mount
+  // ✅ Reset or fetch URLs based on user
   useEffect(() => {
-    getUrls();
-  }, []);
+    if (user) {
+      getUrls();
+    } else {
+      setUrls([]); // clear URLs on logout
+    }
+  }, [user]);
 
   return (
     <UrlContext.Provider

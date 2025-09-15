@@ -7,7 +7,6 @@ const DeleteModal = ({ isOpen, onClose, onDelete, currentLink, loading }) => {
 
   const handleDelete = async () => {
     const res = await onDelete(currentLink.id);
-    console.log(res);
     if (!res.success) {
       onClose(false);
       return toast.custom((t) => (

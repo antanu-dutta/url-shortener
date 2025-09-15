@@ -8,6 +8,7 @@ import { useUrl } from "../../context/UrlContext";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
 import NotificationToast from "../UI/NotificationToast";
+import ThreeDots from "../Loaders/ThreeDots";
 
 const UrlLayout = () => {
   const [formData, setFormData] = useState({ url: "", shortCode: "" });
@@ -25,9 +26,11 @@ const UrlLayout = () => {
       return setError(error?.issues?.[0].message);
     }
     setError(null);
-    console.log(data);
     const res = await createUrl(data);
-    console.log(res);
+    if (!res.success) {
+      setError(res.message);
+    }
+    setFormData({ url: "", shortCode: "" });
   };
 
   const handleUpdate = async (id, newLink) => {
@@ -46,13 +49,16 @@ const UrlLayout = () => {
 
   return (
     <div>
-      <Container className={`flex items-center justify-center`}>
-        <div className="w-6xl mx-auto min-h-[500px] mt-20 p-8 bg-white shadow-primary rounded grid grid-cols-1 md:grid-cols-2 gap-12">
+      <Container className={`flex items-center justify-center px-4 sm:px-6`}>
+        <div className="w-full max-w-6xl mx-auto min-h-[500px] mt-10 sm:mt-20 p-4 sm:p-8 bg-white shadow-primary rounded grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-12">
           <div>
-            <h2 className="tracking-wider text-lg font-semibold mb-5">
+            <h2 className="tracking-wider text-base sm:text-lg font-semibold mb-4 sm:mb-5">
               Create Shortlinks
             </h2>
-            <form className="space-y-6" onSubmit={handleCreateLink}>
+            <form
+              className="space-y-4 sm:space-y-6"
+              onSubmit={handleCreateLink}
+            >
               <div>
                 <label
                   htmlFor="url"
@@ -68,7 +74,7 @@ const UrlLayout = () => {
                     setFormData((prev) => ({ ...prev, url: e.target.value }))
                   }
                   placeholder="Enter your long URL"
-                  className="border border-gray-300 w-full bg-gray-100 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 rounded py-2 px-3 outline-none text-sm transition duration-150"
+                  className="border border-gray-300 w-full bg-gray-100 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 rounded py-2.5 sm:py-2 px-3 outline-none text-sm transition duration-150"
                 />
               </div>
 
@@ -90,13 +96,13 @@ const UrlLayout = () => {
                     }))
                   }
                   placeholder="Custom short code (optional)"
-                  className="border border-gray-300 w-full bg-gray-100 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 rounded py-2 px-3 outline-none text-sm transition duration-150"
+                  className="border border-gray-300 w-full bg-gray-100 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 rounded py-2.5 sm:py-2 px-3 outline-none text-sm transition duration-150"
                 />
               </div>
               {error && <p className="text-sm mb-3 text-red-800">{error}</p>}
               <button
                 type="submit"
-                className="w-full py-2 bg-blue-600 text-white font-medium rounded hover:bg-blue-700 transition duration-200"
+                className="w-full py-2.5 sm:py-2 bg-blue-600 text-white font-medium rounded hover:bg-blue-700 transition duration-200 text-sm sm:text-base"
               >
                 Shorten
               </button>
@@ -106,40 +112,44 @@ const UrlLayout = () => {
 
           {/* shortened links */}
           <div>
-            <h2 className="tracking-wider text-lg font-semibold mb-5">
+            <h2 className="tracking-wider text-base sm:text-lg font-semibold mb-4 sm:mb-5">
               Shortened Links
             </h2>
-            <ul className="flex flex-col gap-4 h-[500px] overflow-y-auto pr-2 custom-scrollbar">
+            <ul className="flex flex-col gap-3 sm:gap-4 h-[400px] sm:h-[500px] overflow-y-auto pr-1 sm:pr-2 custom-scrollbar">
               {urls && urls.length === 0 ? (
-                <div className="flex flex-col items-center justify-center  text-gray-500 py-10">
-                  <p className=" font-medium">No links found</p>
-                  <p className="">Start by creating your first short link ✨</p>
+                <div className="flex flex-col items-center justify-center text-gray-500 py-8 sm:py-10">
+                  <p className="font-medium text-sm sm:text-base">
+                    No links found
+                  </p>
+                  <p className="text-sm sm:text-base text-center">
+                    Start by creating your first short link ✨
+                  </p>
                 </div>
               ) : (
                 urls.map((link) => (
                   <li
                     key={link._id}
-                    className="flex items-center justify-between bg-gray-50 border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow duration-200"
+                    className="flex flex-col sm:flex-row sm:items-center sm:justify-between bg-gray-50 border border-gray-200 rounded-lg p-3 sm:p-4 shadow-sm hover:shadow-md transition-shadow duration-200 gap-3 sm:gap-0"
                   >
                     {/* URL info */}
-                    <div className="flex flex-col max-w-[70%]">
+                    <div className="flex flex-col max-w-full sm:max-w-[70%] min-w-0">
                       <a
                         href={`${link.redirectUrl}/api/v1/url/redirect/${link.shortCode}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-blue-600 font-medium truncate hover:underline"
+                        className="text-blue-600 font-medium truncate hover:underline text-sm sm:text-base"
                       >
                         {`${link.redirectUrl}/${link.shortCode}`}
                       </a>
-                      <span className="text-xs text-gray-500 truncate">
+                      <span className="text-xs text-gray-500 truncate mt-1">
                         {link.originalUrl}
                       </span>
                     </div>
 
                     {/* Action buttons */}
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2 sm:gap-3 self-end sm:self-auto">
                       <button
-                        className="flex items-center justify-center w-9 h-9 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition-all duration-200"
+                        className="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition-all duration-200"
                         onClick={() => {
                           setUpdateModalOpen(true);
                           setCurrentLink({
@@ -149,16 +159,19 @@ const UrlLayout = () => {
                           });
                         }}
                       >
-                        <FilePenLine size={18} />
+                        <FilePenLine
+                          size={16}
+                          className="sm:w-[18px] sm:h-[18px]"
+                        />
                       </button>
                       <button
-                        className="flex items-center justify-center w-9 h-9 bg-red-500 text-white rounded hover:bg-red-600 transition-all duration-200"
+                        className="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 bg-red-500 text-white rounded hover:bg-red-600 transition-all duration-200"
                         onClick={() => {
                           setDeleteModalOpen(true);
                           setCurrentLink({ id: link._id });
                         }}
                       >
-                        <Trash size={18} />
+                        <Trash size={16} className="sm:w-[18px] sm:h-[18px]" />
                       </button>
                     </div>
                   </li>
@@ -182,6 +195,7 @@ const UrlLayout = () => {
         onUpdate={handleUpdate}
         currentLink={currentLink}
       />
+      {loading && <ThreeDots />}
     </div>
   );
 };

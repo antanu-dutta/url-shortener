@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import { createContext } from "react";
-import { api } from "../api/api";
+import { api } from "../api/Api";
 
 const AuthContext = createContext();
 
@@ -15,7 +15,6 @@ const AuthContextProvider = ({ children }) => {
       setLoading(false);
       return data;
     } catch (error) {
-      console.log(error);
       setLoading(false);
       return error?.response?.data;
     } finally {
@@ -25,7 +24,6 @@ const AuthContextProvider = ({ children }) => {
 
   const verifyEmail = async ({ email, otp }) => {
     try {
-      console.log(otp);
       setLoading(true);
       const { data } = await api.put("/auth/verify-email", { email, otp });
       setLoading(false);
@@ -42,12 +40,11 @@ const AuthContextProvider = ({ children }) => {
   const getMe = async () => {
     try {
       setLoading(true);
-      const { data } = await api.get("/auth/me");
+      const { data } = await api.get("/auth/me", { withCredentials: true });
       setUser(data.data);
       setLoading(false);
       return data;
     } catch (error) {
-      console.log(error);
       setUser(null);
       setLoading(false);
       return error?.response?.data;
@@ -64,7 +61,6 @@ const AuthContextProvider = ({ children }) => {
       await getMe();
       return data;
     } catch (error) {
-      console.log(error);
       setLoading(false);
       return error?.response?.data;
     } finally {
@@ -80,7 +76,6 @@ const AuthContextProvider = ({ children }) => {
       setLoading(false);
       return data;
     } catch (error) {
-      console.log(error);
       setUser(null);
       setLoading(false);
       return error?.response?.data;
@@ -100,7 +95,6 @@ const AuthContextProvider = ({ children }) => {
       setUser(res.data.data);
       return res.data;
     } catch (error) {
-      console.log(error);
       return error?.response?.data;
     } finally {
       setLoading(false);

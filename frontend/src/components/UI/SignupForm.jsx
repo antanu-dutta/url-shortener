@@ -14,7 +14,7 @@ const SignupForm = ({
 
   return (
     <form
-      className="mt-32 bg-white shadow-2xl p-6 w-[400px] max-w-full rounded-xl"
+      className=" bg-white shadow-2xl p-6 w-[400px] max-w-full rounded-xl"
       onSubmit={handleSendMail}
     >
       <h2 className="text-center uppercase tracking-widest text-2xl font-semibold mb-8 text-gray-800">

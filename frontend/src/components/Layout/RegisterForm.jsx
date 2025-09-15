@@ -73,7 +73,7 @@ const RegisterForm = () => {
   }, [isActive, timeLeft]);
 
   return (
-    <Container className="flex items-center justify-center">
+    <Container className="flex items-center justify-center px-4 sm:px-6 md:h-[calc(100vh-100px)] ">
       {step === "sendOtp" && (
         <SignupForm
           formData={formData}

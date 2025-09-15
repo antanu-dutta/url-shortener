@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 import NotificationToast from "../components/UI/NotificationToast";
 
 const EditProfile = () => {
-  const { user, updateUser } = useAuth(); // <-- Assume updateUser is in AuthContext
+  const { user, updateUser } = useAuth();
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -19,9 +19,6 @@ const EditProfile = () => {
   const [preview, setPreview] = useState(user?.profilePic || "");
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
-  //   const handleChange = (e) => {
-  //     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  //   };
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -39,7 +36,6 @@ const EditProfile = () => {
 
     try {
       const res = await updateUser({ id: user._id, formData });
-      console.log(res);
       if (!res.success) {
         setError(res.message);
       } else {
@@ -129,11 +125,12 @@ const EditProfile = () => {
                 id="email"
                 type="email"
                 value={formData.email}
+                disabled
                 onChange={(e) =>
                   setFormData((prev) => ({ ...prev, email: e.target.value }))
                 }
                 placeholder="Your Email"
-                className="border border-gray-300 w-full bg-gray-100 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 rounded py-2 px-3 outline-none text-sm transition duration-150"
+                className="border border-gray-300 w-full bg-gray-100 disabled:bg-gray-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 rounded py-2 px-3 outline-none text-sm transition duration-150"
               />
             </div>
 

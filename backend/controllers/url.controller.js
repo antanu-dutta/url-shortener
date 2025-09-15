@@ -23,10 +23,13 @@ export const createShortUrl = async (req, res) => {
 
     // 4. Ensure shortCode is unique
     let existingLink = await URL.findOne({ shortCode });
-    while (existingLink) {
-      shortCode = generateShortCode();
-      existingLink = await URL.findOne({ shortCode });
+    if (existingLink) {
+      return res.json(responseMessage(false, "Shortcode already exists"));
     }
+    // while (existingLink) {
+    //   shortCode = generateShortCode();
+    //   existingLink = await URL.findOne({ shortCode });
+    // }
 
     // 5. Create new short URL
     const newLink = await URL.create({
