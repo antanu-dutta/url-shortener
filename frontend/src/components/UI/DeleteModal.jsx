@@ -20,7 +20,7 @@ const DeleteModal = ({ isOpen, onClose, onDelete, currentLink, loading }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 bg-opacity-50 flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-black/50 bg-opacity-50 flex items-center justify-center p-3 z-50">
       <div className="bg-white rounded shadow-lg w-full max-w-md p-6 animate-fadeIn">
         {/* Header */}
         <h2 className="text-xl font-semibold text-gray-800">

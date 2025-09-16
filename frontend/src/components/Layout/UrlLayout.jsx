@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Container from "../UI/Container";
-import { FilePenLine, Trash } from "lucide-react";
+import { Copy, FilePenLine, Trash } from "lucide-react";
 import DeleteModal from "../UI/DeleteModal";
 import EditLinkModal from "../UI/EditLinkModal";
 import { urlSchema } from "../../validation/url.validation";
@@ -148,6 +148,23 @@ const UrlLayout = () => {
 
                     {/* Action buttons */}
                     <div className="flex items-center gap-2 sm:gap-3 self-end sm:self-auto">
+                      <button
+                        className="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 bg-gray-500 text-white rounded hover:bg-red-600 transition-all duration-200"
+                        onClick={() => {
+                          navigator.clipboard.writeText(
+                            `${link.redirectUrl}/api/v1/url/redirect/${link.shortCode}`
+                          );
+                          toast.custom((t) => (
+                            <NotificationToast
+                              type="success"
+                              message={"Link copied to clipboard!"}
+                              t={t}
+                            />
+                          ));
+                        }}
+                      >
+                        <Copy size={16} className="sm:w-[18px] sm:h-[18px]" />
+                      </button>
                       <button
                         className="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition-all duration-200"
                         onClick={() => {
